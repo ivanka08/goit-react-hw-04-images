@@ -1,31 +1,29 @@
-import React, { PureComponent } from 'react';
-import css from './SearchBar.module.css';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
+import css from './SearchBar.module.css';
 import { FaSearch } from "react-icons/fa";
 
 
-
-export default class SearchBar extends PureComponent {
-
-  state = { inputquery: '', };
-
-  handleChange = (e) => {
-    this.setState({inputquery: e.currentTarget.value})
-  }
-
-  formSubmit = (e) => {
-    e.preventDefault();
-    this.props.onSubmit(this.state.inputquery);
-    this.setState({ inputquery: '' });
-  }
-
-  render() {
-    return <header className={css.SearchBar}>
-
-      <form className={css.SearchForm} onSubmit={this.formSubmit}>
+const Searchbar = ({ onSubmit }) => {
   
-        <button type="submit" className={css.button}>
-          <FaSearch/>
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSubmit = evt => {
+    evt.preventDefault();
+
+    if (searchValue.trim() === '') {
+      return;
+    }
+    onSubmit(searchValue);
+  }
+
+
+  return <header className={css.SearchBar}>
+
+      <form className={css.SearchForm} onSubmit={handleSubmit}>
+  
+      <button type="submit" className={css.button}>
+       <FaSearch/>
         </button>
 
         <input
@@ -34,15 +32,16 @@ export default class SearchBar extends PureComponent {
           autoComplete="off"
           autoFocus
           placeholder="Search images and photos"
-          onChange={this.handleChange}
-          value={this.state.inputquery}
+          onChange={(evt) => {setSearchValue(evt.currentTarget.value.toLowerCase().trim())}}
         />
 
       </form>
     </header>
-  }
 }
 
-SearchBar.propTypes = {
-  onSubmit: PropTypes.func,
+export default Searchbar;
+
+
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 }
