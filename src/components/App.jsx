@@ -20,6 +20,7 @@ const App = () => {
 
   useEffect(() => {
     fetchImages();
+     if (!query) return;
   }, [query, page]);
 
   const saveSearchQuery = (newQuery) => {
