@@ -19,20 +19,9 @@ const App = () => {
   const [index, setIndex] = useState(null);
 
   useEffect(() => {
-    fetchImages();
-     if (!query) return;
-  }, [query, page]);
+    if (!query) return;
 
-  const saveSearchQuery = (newQuery) => {
-    setQuery(newQuery);
-    setPage(1);
-  };
-
-  const handleClick = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
-
-  const fetchImages = async () => {
+    const fetchImages = async () => {
     setLoading(true);
     try {
       const fetchedImages = await fetchData(query, page);
@@ -44,7 +33,21 @@ const App = () => {
       setError(error);
       setLoading(false);
     }
+    };
+    
+     fetchImages();
+  }, [query, page]);
+
+  const saveSearchQuery = (newQuery) => {
+    setQuery(newQuery);
+    setPage(1);
+    setError(null);
   };
+
+  const handleClick = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
 
   const toggleModal = () => {
     setShowModal((prevShowModal) => !prevShowModal);
@@ -83,6 +86,7 @@ const App = () => {
         />
       )}
 
+      {error && <p className={css.errorMsg}>Помилка: {error.message}</p>}
       {images.length >= 12 && <Button onClick={handleClick} />}
 
       {showModal && (
